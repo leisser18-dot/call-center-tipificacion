@@ -161,15 +161,11 @@
       </div>
       <div class="field">
         <label for="tipo">Tipo de incidencia</label>
-        <select id="tipo" required>
-          <option value="">Seleccionar...</option>
-        </select>
+        <input type="text" id="tipo" placeholder="Ej. Escalamiento, Queja por facturación..." required>
       </div>
       <div class="field">
         <label for="subtipo">Subtipo</label>
-        <select id="subtipo" required>
-          <option value="">Primero selecciona el tipo</option>
-        </select>
+        <input type="text" id="subtipo" placeholder="Ej. Solicitud de supervisor, Cobro no reconocido..." required>
       </div>
       <div class="field">
         <label for="severidad">Severidad</label>
@@ -229,97 +225,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const TIPOS = {
-  "Consulta e información": [
-    "Información de productos o servicios",
-    "Estado de trámite o solicitud",
-    "Dudas sobre factura o cobro",
-    "Horarios y puntos de atención"
-  ],
-  "Queja o reclamo": [
-    "Mala atención del asesor",
-    "Inconformidad con el servicio",
-    "Tiempo de espera excesivo",
-    "Incumplimiento de lo ofrecido",
-    "Reclamo por equipos o servicios"
-  ],
-  "Solicitud de gestión": [
-    "Contratación de servicio",
-    "Cambio de plan o producto",
-    "Actualización de datos del cliente",
-    "Activación o desbloqueo",
-    "Baja o cancelación"
-  ],
-  "Incidente técnico": [
-    "Falla del sistema o plataforma",
-    "Problema de conexión o señal",
-    "Equipo o dispositivo no funciona",
-    "Error al iniciar sesión",
-    "Problema con instalación"
-  ],
-  "Facturación y cobros": [
-    "Cobro no reconocido",
-    "Doble cobro",
-    "Pago no aplicado",
-    "Solicitud de factura o comprobante",
-    "Ajuste o nota de crédito"
-  ],
-  "Cobranza": [
-    "Convenio de pago",
-    "Descuento o condonación",
-    "Consulta de saldo o deuda",
-    "Refinanciamiento"
-  ],
-  "Escalamiento": [
-    "Solicitud de supervisor",
-    "Seguimiento de caso abierto",
-    "Cliente en riesgo de fuga",
-    "Queja de segundo contacto"
-  ],
-  "Sugerencia o felicitación": [
-    "Sugerencia de mejora",
-    "Felicitación por la atención",
-    "Felicitación por la resolución"
-  ],
-  "Garantía y devoluciones": [
-    "Solicitud de garantía",
-    "Reembolso o devolución",
-    "Reposición o cambio de producto",
-    "Fallo del producto en garantía"
-  ],
-  "Otros": [
-    "Otro"
-  ]
-};
-
 const $ = id => document.getElementById(id);
-
-const tipoSel = $("tipo"), subtipoSel = $("subtipo");
-
-function cargarTipos() {
-  tipoSel.innerHTML = '<option value="">Seleccionar...</option>';
-  for (const tipo of Object.keys(TIPOS)) {
-    const opt = document.createElement("option");
-    opt.value = tipo;
-    opt.textContent = tipo;
-    tipoSel.appendChild(opt);
-  }
-}
-
-tipoSel.addEventListener("change", () => {
-  subtipoSel.innerHTML = "";
-  const subtipos = TIPOS[tipoSel.value];
-  if (!subtipos) {
-    subtipoSel.innerHTML = '<option value="">Primero selecciona el tipo</option>';
-    return;
-  }
-  for (const s of subtipos) {
-    const opt = document.createElement("option");
-    opt.value = s;
-    opt.textContent = s;
-    subtipoSel.appendChild(opt);
-  }
-});
 
 function mostrarToast(msg, error = false) {
   const t = $("toast");
@@ -381,8 +287,8 @@ $("formulario").addEventListener("submit", async (e) => {
     fecha: $("fecha").value,
     canal: $("canal").value,
     agente: $("agente").value.trim(),
-    tipo: tipoSel.value,
-    subtipo: subtipoSel.value,
+    tipo: $("tipo").value.trim(),
+    subtipo: $("subtipo").value.trim(),
     severidad: $("severidad").value,
     estado: $("estado").value,
     descripcion: $("descripcion").value.trim()
@@ -398,7 +304,6 @@ $("formulario").addEventListener("submit", async (e) => {
     mostrarToast("Incidencia registrada correctamente");
     e.target.reset();
     $("fecha").value = fechaHoy();
-    subtipoSel.innerHTML = '<option value="">Primero selecciona el tipo</option>';
     cargarRegistros();
   } catch (err) {
     mostrarToast("Error al guardar: " + err.message, true);
@@ -408,10 +313,8 @@ $("formulario").addEventListener("submit", async (e) => {
 $("btnLimpiar").addEventListener("click", () => {
   $("formulario").reset();
   $("fecha").value = fechaHoy();
-  subtipoSel.innerHTML = '<option value="">Primero selecciona el tipo</option>';
 });
 
-cargarTipos();
 $("fecha").value = fechaHoy();
 cargarRegistros();
 </script>
