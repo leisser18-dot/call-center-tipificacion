@@ -85,6 +85,19 @@
   .btn:hover { filter: brightness(1.05); }
   .btn-primary { background: #155eef; color: #fff; }
   .btn:active { transform: translateY(1px); }
+  .btn-secondary { background: #eef2f7; color: #1f2933; }
+  .btn-mini {
+    background: #eef2f7;
+    border: 1px solid #cbd2d9;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    color: #155eef;
+  }
+  .btn-mini:hover { background: #e0e8f5; }
 
   .form-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 12px; }
 
@@ -194,8 +207,9 @@
       </div>
     </div>
     <div class="form-actions">
+      <button type="button" class="btn" id="btnCancelar" style="display:none;">Cancelar edición</button>
       <button type="button" class="btn" id="btnLimpiar">Limpiar</button>
-      <button type="submit" class="btn btn-primary">Registrar incidencia</button>
+      <button type="submit" class="btn btn-primary" id="btnGuardar">Registrar incidencia</button>
     </div>
   </form>
 
@@ -213,6 +227,7 @@
             <th>Severidad</th>
             <th>Estado</th>
             <th>Descripción</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -226,6 +241,9 @@
 
 <script>
 const $ = id => document.getElementById(id);
+
+let registros = [];
+let editandoId = null;
 
 function mostrarToast(msg, error = false) {
   const t = $("toast");
@@ -266,7 +284,8 @@ function renderLista(records) {
       <td>${esc(r.subtipo)}</td>
       <td>${badgeSeveridad(r.severidad)}</td>
       <td>${esc(r.estado)}</td>
-      <td style="max-width:260px;">${esc((r.descripcion || "").slice(0, 60))}</td>`;
+      <td style="max-width:260px;">${esc((r.descripcion || "").slice(0, 60))}</td>
+      <td><button type="button" class="btn-mini" data-id="${esc(r.id)}">Editar</button></td>`;
     tbody.appendChild(tr);
   }
 }
@@ -275,11 +294,43 @@ async function cargarRegistros() {
   try {
     const res = await fetch("/api/incidencias");
     const data = await res.json();
+    registros = data;
     renderLista(data);
   } catch (e) {
     mostrarToast("No se pudo leer los registros", true);
   }
 }
+
+function editarRegistro(id) {
+  const r = registros.find((x) => x.id === id);
+  if (!r) return;
+  editandoId = id;
+  $("fecha").value = r.fecha || "";
+  $("canal").value = r.canal || "";
+  $("agente").value = r.agente || "";
+  $("tipo").value = r.tipo || "";
+  $("subtipo").value = r.subtipo || "";
+  $("severidad").value = r.severidad || "";
+  $("estado").value = r.estado || "";
+  $("descripcion").value = r.descripcion || "";
+  $("btnGuardar").textContent = "Actualizar incidencia";
+  $("btnCancelar").style.display = "inline-block";
+  $("formulario").scrollIntoView({ behavior: "smooth" });
+}
+
+function cancelarEdicion() {
+  editandoId = null;
+  $("formulario").reset();
+  $("fecha").value = fechaHoy();
+  $("btnGuardar").textContent = "Registrar incidencia";
+  $("btnCancelar").style.display = "none";
+}
+
+$("tbody").addEventListener("click", (e) => {
+  const btn = e.target.closest(".btn-mini");
+  if (!btn) return;
+  editarRegistro(btn.dataset.id);
+});
 
 $("formulario").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -293,27 +344,27 @@ $("formulario").addEventListener("submit", async (e) => {
     estado: $("estado").value,
     descripcion: $("descripcion").value.trim()
   };
+  const url = editandoId ? `/api/incidencias/${editandoId}` : "/api/incidencias";
+  const method = editandoId ? "PUT" : "POST";
   try {
-    const res = await fetch("/api/incidencias", {
-      method: "POST",
+    const res = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(incidencia)
     });
     const data = await res.json();
     if (!data.ok) throw new Error(data.error || "Error");
-    mostrarToast("Incidencia registrada correctamente");
-    e.target.reset();
-    $("fecha").value = fechaHoy();
+    mostrarToast(editandoId ? "Incidencia actualizada" : "Incidencia registrada correctamente");
+    cancelarEdicion();
     cargarRegistros();
   } catch (err) {
     mostrarToast("Error al guardar: " + err.message, true);
   }
 });
 
-$("btnLimpiar").addEventListener("click", () => {
-  $("formulario").reset();
-  $("fecha").value = fechaHoy();
-});
+$("btnCancelar").addEventListener("click", cancelarEdicion);
+
+$("btnLimpiar").addEventListener("click", cancelarEdicion);
 
 $("fecha").value = fechaHoy();
 cargarRegistros();

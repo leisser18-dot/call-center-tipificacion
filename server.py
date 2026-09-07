@@ -42,6 +42,34 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
         self.send_error(405)
 
+    def do_PUT(self):
+        if self.path.startswith("/api/incidencias/"):
+            inc_id = self.path.rsplit("/", 1)[-1]
+            length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(length)
+            try:
+                text = body.decode("utf-8")
+            except UnicodeDecodeError:
+                text = body.decode("latin-1")
+            try:
+                cambios = json.loads(text)
+            except json.JSONDecodeError:
+                self.send_json({"ok": False, "error": "Datos inválidos"}, 400)
+                return
+
+            data = self.load_data()
+            idx = next((i for i, r in enumerate(data) if r.get("id") == inc_id), None)
+            if idx is None:
+                self.send_json({"ok": False, "error": "Incidencia no encontrada"}, 404)
+                return
+            data[idx].update(cambios)
+            data[idx]["actualizado"] = datetime.datetime.now().isoformat()
+            self.save_data(data)
+            self.send_json({"ok": True, "incidencia": data[idx]})
+            return
+
+        self.send_error(405)
+
     def do_OPTIONS(self):
         self.send_response(200)
         self.end_headers()
