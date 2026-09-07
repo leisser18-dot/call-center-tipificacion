@@ -57,6 +57,24 @@
     border-bottom: 1px solid #e6edf5;
   }
   .card-head h2 { margin: 0; padding: 0; border: none; }
+  .filtro {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    background: #f7fafc;
+    border: 1px solid #e6edf5;
+    border-radius: 10px;
+  }
+  .filtro .field { min-width: 150px; }
+  .filtro-info {
+    align-self: center;
+    font-size: 13px;
+    color: #52606d;
+    margin-left: auto;
+  }
 
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .field { display: flex; flex-direction: column; gap: 6px; }
@@ -227,6 +245,18 @@
       <h2>Últimos registros</h2>
       <button type="button" class="btn btn-mini" id="btnExcel">Descargar Excel</button>
     </div>
+    <div class="filtro">
+      <div class="field">
+        <label for="fDesde">Desde</label>
+        <input type="date" id="fDesde">
+      </div>
+      <div class="field">
+        <label for="fHasta">Hasta</label>
+        <input type="date" id="fHasta">
+      </div>
+      <button type="button" class="btn btn-mini" id="btnFiltroLimpiar">Limpiar filtro</button>
+      <span class="filtro-info" id="filtroInfo"></span>
+    </div>
     <div style="overflow-x:auto;">
       <table>
         <thead>
@@ -283,12 +313,31 @@ function badgeSeveridad(s) {
   return `<span class="badge ${map[s] || ""}">${esc(s)}</span>`;
 }
 
-function renderLista(records) {
+function registrosFiltrados() {
+  const desde = $("fDesde").value;
+  const hasta = $("fHasta").value;
+  if (!desde && !hasta) return registros;
+  return registros.filter((r) => {
+    if (desde && r.fecha < desde) return false;
+    if (hasta && r.fecha > hasta) return false;
+    return true;
+  });
+}
+
+function renderLista() {
   const tbody = $("tbody");
-  $("empty").style.display = records.length ? "none" : "block";
+  const desde = $("fDesde").value;
+  const hasta = $("fHasta").value;
+  const tieneFiltro = !!(desde || hasta);
+  const filtrados = registrosFiltrados();
+  $("empty").style.display = filtrados.length ? "none" : "block";
+  $("empty").textContent = registros.length
+    ? "No hay incidencias para el rango de fechas seleccionado."
+    : "Aún no hay incidencias registradas.";
+  $("filtroInfo").textContent = tieneFiltro ? filtrados.length + " resultado(s)" : "";
   tbody.innerHTML = "";
-  const recientes = records.slice(-10).reverse();
-  for (const r of recientes) {
+  const mostrar = tieneFiltro ? [...filtrados].reverse() : filtrados.slice(-10).reverse();
+  for (const r of mostrar) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${esc(r.fecha)}</td>
@@ -309,7 +358,7 @@ async function cargarRegistros() {
     const res = await fetch("/api/incidencias");
     const data = await res.json();
     registros = data;
-    renderLista(data);
+    renderLista();
   } catch (e) {
     mostrarToast("No se pudo leer los registros", true);
   }
@@ -414,6 +463,15 @@ function descargarExcel() {
 }
 
 $("btnExcel").addEventListener("click", descargarExcel);
+
+const aplicarFiltro = () => renderLista();
+$("fDesde").addEventListener("change", aplicarFiltro);
+$("fHasta").addEventListener("change", aplicarFiltro);
+$("btnFiltroLimpiar").addEventListener("click", () => {
+  $("fDesde").value = "";
+  $("fHasta").value = "";
+  renderLista();
+});
 
 $("fecha").value = fechaHoy();
 cargarRegistros();
