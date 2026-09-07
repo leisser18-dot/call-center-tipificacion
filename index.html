@@ -48,6 +48,15 @@
     padding-bottom: 10px;
     border-bottom: 1px solid #e6edf5;
   }
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e6edf5;
+  }
+  .card-head h2 { margin: 0; padding: 0; border: none; }
 
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .field { display: flex; flex-direction: column; gap: 6px; }
@@ -214,7 +223,10 @@
   </form>
 
   <div class="card">
-    <h2>Últimos registros</h2>
+    <div class="card-head">
+      <h2>Últimos registros</h2>
+      <button type="button" class="btn btn-mini" id="btnExcel">Descargar Excel</button>
+    </div>
     <div style="overflow-x:auto;">
       <table>
         <thead>
@@ -238,6 +250,8 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -365,6 +379,41 @@ $("formulario").addEventListener("submit", async (e) => {
 $("btnCancelar").addEventListener("click", cancelarEdicion);
 
 $("btnLimpiar").addEventListener("click", cancelarEdicion);
+
+function descargarExcel() {
+  if (typeof XLSX === "undefined") {
+    mostrarToast("El módulo de Excel no cargó. Revisa tu conexión.", true);
+    return;
+  }
+  if (!registros.length) {
+    mostrarToast("No hay registros para exportar", true);
+    return;
+  }
+  const filas = registros.map((r) => ({
+    Fecha: r.fecha,
+    Canal: r.canal,
+    Agente: r.agente,
+    "Tipo de incidencia": r.tipo,
+    Subtipo: r.subtipo,
+    Severidad: r.severidad,
+    Estado: r.estado,
+    Descripción: r.descripcion,
+    Creado: (r.creado || "").replace("T", " ").slice(0, 19),
+    Actualizado: (r.actualizado || "").replace("T", " ").slice(0, 19)
+  }));
+  const ws = XLSX.utils.json_to_sheet(filas);
+  ws["!cols"] = [
+    { wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 22 },
+    { wch: 24 }, { wch: 10 }, { wch: 12 }, { wch: 40 },
+    { wch: 20 }, { wch: 20 }
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Incidencias");
+  XLSX.writeFile(wb, "reporte_incidencias_" + fechaHoy() + ".xlsx");
+  mostrarToast("Reporte Excel descargado");
+}
+
+$("btnExcel").addEventListener("click", descargarExcel);
 
 $("fecha").value = fechaHoy();
 cargarRegistros();
