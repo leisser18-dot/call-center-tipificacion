@@ -1,0 +1,11 @@
+# Datos locales de la app Python (en Cloudflare se guarda en KV, no en git)
+incidencias.json
+
+# Logs y config local
+err.log
+out.log
+*.log
+
+# Node / Wrangler
+node_modules/
+.wrangler/

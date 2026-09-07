@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tipificación de Incidencias - Call Center</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f0f4f8;
+    color: #1f2933;
+    min-height: 100vh;
+    padding: 24px 16px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  header {
+    background: linear-gradient(135deg, #155eef, #0a3d91);
+    color: #fff;
+    border-radius: 12px;
+    padding: 22px 28px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  header .logo {
+    background: rgba(255,255,255,.15);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 30px;
+    line-height: 1;
+  }
+  header h1 { font-size: 20px; }
+  header p { font-size: 13px; opacity: .85; }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(15, 35, 70, .08);
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .card h2 {
+    font-size: 16px;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e6edf5;
+  }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  label { font-size: 13px; font-weight: 600; color: #3e4c59; }
+  label .req { color: #e12b38; }
+
+  input, select, textarea {
+    border: 1px solid #cbd2d9;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #fff;
+    color: #1f2933;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #155eef;
+    box-shadow: 0 0 0 3px rgba(21, 94, 239, .15);
+  }
+  textarea { resize: vertical; min-height: 90px; }
+
+  .btn {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter .15s;
+  }
+  .btn:hover { filter: brightness(1.05); }
+  .btn-primary { background: #155eef; color: #fff; }
+  .btn:active { transform: translateY(1px); }
+
+  .form-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 12px; }
+
+  .toast {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #14532d;
+    color: #fff;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.2);
+    z-index: 100;
+  }
+  .toast.error { background: #991b1b; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eef2f7; }
+  th { background: #f7fafc; color: #52606d; font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+  tr:hover td { background: #f7fafc; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .sev-baja { background: #e3f8e6; color: #157a3a; }
+  .sev-media { background: #fff3d6; color: #92400e; }
+  .sev-alta { background: #ffe0df; color: #b42318; }
+  .sev-critica { background: #f1d0d6; color: #7a1f2b; }
+  .empty { text-align: center; color: #9aa5b1; padding: 28px 0; }
+
+  .meta { font-size: 12px; color: #616e7c; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🎧</div>
+    <div>
+      <h1>Tipificación de Incidencias</h1>
+      <p>Registro y clasificación de incidencias para el call center</p>
+    </div>
+  </header>
+
+  <form id="formulario" class="card" novalidate>
+    <h2>Nueva incidencia</h2>
+    <div class="grid">
+      <div class="field">
+        <label for="fecha">Fecha</label>
+        <input type="date" id="fecha" required>
+      </div>
+      <div class="field">
+        <label for="canal">Canal de atención</label>
+        <select id="canal" required>
+          <option value="">Seleccionar...</option>
+          <option>Teléfono</option>
+          <option>Chat</option>
+          <option>WhatsApp</option>
+          <option>Email</option>
+          <option>Web / Redes</option>
+          <option>Presencial</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="agente">Agente</label>
+        <input type="text" id="agente" placeholder="Nombre o código" required>
+      </div>
+      <div class="field">
+        <label for="tipo">Tipo de incidencia</label>
+        <select id="tipo" required>
+          <option value="">Seleccionar...</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="subtipo">Subtipo</label>
+        <select id="subtipo" required>
+          <option value="">Primero selecciona el tipo</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="severidad">Severidad</label>
+        <select id="severidad" required>
+          <option value="">Seleccionar...</option>
+          <option value="Baja">Baja</option>
+          <option value="Media">Media</option>
+          <option value="Alta">Alta</option>
+          <option value="Crítica">Crítica</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="estado">Estado</label>
+        <select id="estado" required>
+          <option value="">Seleccionar...</option>
+          <option>Abierta</option>
+          <option>En proceso</option>
+          <option>Resuelta</option>
+          <option>Escalada</option>
+          <option>Cerrada</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label for="descripcion">Descripción de la incidencia</label>
+        <textarea id="descripcion" placeholder="Describe brevemente el motivo del contacto y el detalle de la incidencia..." required></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn" id="btnLimpiar">Limpiar</button>
+      <button type="submit" class="btn btn-primary">Registrar incidencia</button>
+    </div>
+  </form>
+
+  <div class="card">
+    <h2>Últimos registros</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Canal</th>
+            <th>Agente</th>
+            <th>Tipo</th>
+            <th>Subtipo</th>
+            <th>Severidad</th>
+            <th>Estado</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <p class="empty" id="empty" style="display:none;">Aún no hay incidencias registradas.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TIPOS = {
+  "Técnico": ["Falla de servicio", "Sin señal", "Lentitud del servicio", "Problema de instalación", "Configuración / equipo"],
+  "Facturación y pagos": ["Cobro incorrecto", "Doble facturación", "Pago no aplicado", "Factura no recibida", "Ajuste / nota de crédito"],
+  "Venta y contratación": ["Contratación de servicio", "Activación de plan", "Migración / upgrade", "Cancelación"],
+  "Cobranzas": ["Convenio de pago", "Descuento por mora", "Refinanciamiento", "Consulta de deuda"],
+  "Garantías y devoluciones": ["Reparación", "Cambio de equipo", "Devolución de dinero", "Reclamo por garantía"],
+  "Reclamo comercial": ["Mala atención", "Publicidad engañosa", "Doble cobro", "Negación de servicio"],
+  "Otros": ["Consulta general", "Otro"]
+};
+
+const $ = id => document.getElementById(id);
+
+const tipoSel = $("tipo"), subtipoSel = $("subtipo");
+
+function cargarTipos() {
+  tipoSel.innerHTML = '<option value="">Seleccionar...</option>';
+  for (const tipo of Object.keys(TIPOS)) {
+    const opt = document.createElement("option");
+    opt.value = tipo;
+    opt.textContent = tipo;
+    tipoSel.appendChild(opt);
+  }
+}
+
+tipoSel.addEventListener("change", () => {
+  subtipoSel.innerHTML = "";
+  const subtipos = TIPOS[tipoSel.value];
+  if (!subtipos) {
+    subtipoSel.innerHTML = '<option value="">Primero selecciona el tipo</option>';
+    return;
+  }
+  for (const s of subtipos) {
+    const opt = document.createElement("option");
+    opt.value = s;
+    opt.textContent = s;
+    subtipoSel.appendChild(opt);
+  }
+});
+
+function mostrarToast(msg, error = false) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.className = "toast" + (error ? " error" : "");
+  t.style.display = "block";
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.display = "none"; }, 3000);
+}
+
+function fechaHoy() {
+  return new Date().toISOString().split("T")[0];
+}
+
+function esc(t) {
+  const d = document.createElement("div");
+  d.textContent = t == null ? "" : t;
+  return d.innerHTML;
+}
+
+function badgeSeveridad(s) {
+  const map = { "Baja": "sev-baja", "Media": "sev-media", "Alta": "sev-alta", "Crítica": "sev-critica" };
+  return `<span class="badge ${map[s] || ""}">${esc(s)}</span>`;
+}
+
+function renderLista(records) {
+  const tbody = $("tbody");
+  $("empty").style.display = records.length ? "none" : "block";
+  tbody.innerHTML = "";
+  const recientes = records.slice(-10).reverse();
+  for (const r of recientes) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${esc(r.fecha)}</td>
+      <td>${esc(r.canal)}</td>
+      <td>${esc(r.agente)}</td>
+      <td>${esc(r.tipo)}</td>
+      <td>${esc(r.subtipo)}</td>
+      <td>${badgeSeveridad(r.severidad)}</td>
+      <td>${esc(r.estado)}</td>
+      <td style="max-width:260px;">${esc((r.descripcion || "").slice(0, 60))}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+async function cargarRegistros() {
+  try {
+    const res = await fetch("/api/incidencias");
+    const data = await res.json();
+    renderLista(data);
+  } catch (e) {
+    mostrarToast("No se pudo leer los registros", true);
+  }
+}
+
+$("formulario").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const incidencia = {
+    fecha: $("fecha").value,
+    canal: $("canal").value,
+    agente: $("agente").value.trim(),
+    tipo: tipoSel.value,
+    subtipo: subtipoSel.value,
+    severidad: $("severidad").value,
+    estado: $("estado").value,
+    descripcion: $("descripcion").value.trim()
+  };
+  try {
+    const res = await fetch("/api/incidencias", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(incidencia)
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || "Error");
+    mostrarToast("Incidencia registrada correctamente");
+    e.target.reset();
+    $("fecha").value = fechaHoy();
+    subtipoSel.innerHTML = '<option value="">Primero selecciona el tipo</option>';
+    cargarRegistros();
+  } catch (err) {
+    mostrarToast("Error al guardar: " + err.message, true);
+  }
+});
+
+$("btnLimpiar").addEventListener("click", () => {
+  $("formulario").reset();
+  $("fecha").value = fechaHoy();
+  subtipoSel.innerHTML = '<option value="">Primero selecciona el tipo</option>';
+});
+
+cargarTipos();
+$("fecha").value = fechaHoy();
+cargarRegistros();
+</script>
+</body>
+</html>

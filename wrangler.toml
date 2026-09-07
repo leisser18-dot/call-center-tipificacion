@@ -1,0 +1,7 @@
+name = "call-center-tipificacion"
+compatibility_date = "2026-09-07"
+pages_build_output_dir = "."
+
+[[kv_namespaces]]
+binding = "CALL_CENTER_KV"
+id = "57a539c2ce4d4ec087088ef0b37716fc"
