@@ -208,10 +208,6 @@
         <input type="text" id="tipo" placeholder="Ej. Escalamiento, Queja por facturación..." required>
       </div>
       <div class="field">
-        <label for="subtipo">Subtipo</label>
-        <input type="text" id="subtipo" placeholder="Ej. Solicitud de supervisor, Cobro no reconocido..." required>
-      </div>
-      <div class="field">
         <label for="severidad">Severidad</label>
         <select id="severidad" required>
           <option value="">Seleccionar...</option>
@@ -270,7 +266,6 @@
             <th>Canal</th>
             <th>Agente</th>
             <th>Tipo</th>
-            <th>Subtipo</th>
             <th>Severidad</th>
             <th>Estado</th>
             <th>Descripción</th>
@@ -355,7 +350,6 @@ function renderLista() {
       <td>${esc(r.canal)}</td>
       <td>${esc(r.agente)}</td>
       <td>${esc(r.tipo)}</td>
-      <td>${esc(r.subtipo)}</td>
       <td>${badgeSeveridad(r.severidad)}</td>
       <td>${esc(r.estado)}</td>
       <td style="max-width:260px;">${esc((r.descripcion || "").slice(0, 60))}</td>
@@ -384,7 +378,6 @@ function editarRegistro(id) {
   $("canal").value = r.canal || "";
   $("agente").value = r.agente || "";
   $("tipo").value = r.tipo || "";
-  $("subtipo").value = r.subtipo || "";
   $("severidad").value = r.severidad || "";
   $("estado").value = r.estado || "";
   $("descripcion").value = r.descripcion || "";
@@ -421,7 +414,6 @@ $("formulario").addEventListener("submit", async (e) => {
     canal: $("canal").value,
     agente: $("agente").value.trim(),
     tipo: $("tipo").value.trim(),
-    subtipo: $("subtipo").value.trim(),
     severidad: $("severidad").value,
     estado: $("estado").value,
     descripcion: $("descripcion").value.trim()
@@ -463,7 +455,6 @@ function descargarExcel() {
     Canal: r.canal,
     Agente: r.agente,
     "Tipo de incidencia": r.tipo,
-    Subtipo: r.subtipo,
     Severidad: r.severidad,
     Estado: r.estado,
     Descripción: r.descripcion,
@@ -473,7 +464,7 @@ function descargarExcel() {
   const ws = XLSX.utils.json_to_sheet(filas);
   ws["!cols"] = [
     { wch: 12 }, { wch: 8 }, { wch: 12 }, { wch: 10 }, { wch: 22 },
-    { wch: 24 }, { wch: 10 }, { wch: 12 }, { wch: 40 },
+    { wch: 10 }, { wch: 12 }, { wch: 40 },
     { wch: 20 }, { wch: 20 }
   ];
   const wb = XLSX.utils.book_new();
