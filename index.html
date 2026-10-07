@@ -184,6 +184,10 @@
         <input type="date" id="fecha" required>
       </div>
       <div class="field">
+        <label for="hora">Hora <span class="req">*</span></label>
+        <input type="time" id="hora" required>
+      </div>
+      <div class="field">
         <label for="canal">Canal de atención</label>
         <select id="canal" required>
           <option value="">Seleccionar...</option>
@@ -262,6 +266,7 @@
         <thead>
           <tr>
             <th>Fecha</th>
+            <th>Hora</th>
             <th>Canal</th>
             <th>Agente</th>
             <th>Tipo</th>
@@ -300,6 +305,11 @@ function mostrarToast(msg, error = false) {
 
 function fechaHoy() {
   return new Date().toISOString().split("T")[0];
+}
+
+function horaAhora() {
+  const d = new Date();
+  return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
 }
 
 function esc(t) {
@@ -341,6 +351,7 @@ function renderLista() {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${esc(r.fecha)}</td>
+      <td>${esc(r.hora)}</td>
       <td>${esc(r.canal)}</td>
       <td>${esc(r.agente)}</td>
       <td>${esc(r.tipo)}</td>
@@ -369,6 +380,7 @@ function editarRegistro(id) {
   if (!r) return;
   editandoId = id;
   $("fecha").value = r.fecha || "";
+  $("hora").value = r.hora || "";
   $("canal").value = r.canal || "";
   $("agente").value = r.agente || "";
   $("tipo").value = r.tipo || "";
@@ -385,6 +397,7 @@ function cancelarEdicion() {
   editandoId = null;
   $("formulario").reset();
   $("fecha").value = fechaHoy();
+  $("hora").value = horaAhora();
   $("btnGuardar").textContent = "Registrar incidencia";
   $("btnCancelar").style.display = "none";
 }
@@ -397,8 +410,14 @@ $("tbody").addEventListener("click", (e) => {
 
 $("formulario").addEventListener("submit", async (e) => {
   e.preventDefault();
+  if (!$("hora").value) {
+    mostrarToast("Debes indicar la hora de la incidencia", true);
+    $("hora").focus();
+    return;
+  }
   const incidencia = {
     fecha: $("fecha").value,
+    hora: $("hora").value,
     canal: $("canal").value,
     agente: $("agente").value.trim(),
     tipo: $("tipo").value.trim(),
@@ -440,6 +459,7 @@ function descargarExcel() {
   }
   const filas = registros.map((r) => ({
     Fecha: r.fecha,
+    Hora: r.hora,
     Canal: r.canal,
     Agente: r.agente,
     "Tipo de incidencia": r.tipo,
@@ -452,7 +472,7 @@ function descargarExcel() {
   }));
   const ws = XLSX.utils.json_to_sheet(filas);
   ws["!cols"] = [
-    { wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 22 },
+    { wch: 12 }, { wch: 8 }, { wch: 12 }, { wch: 10 }, { wch: 22 },
     { wch: 24 }, { wch: 10 }, { wch: 12 }, { wch: 40 },
     { wch: 20 }, { wch: 20 }
   ];
@@ -474,6 +494,7 @@ $("btnFiltroLimpiar").addEventListener("click", () => {
 });
 
 $("fecha").value = fechaHoy();
+$("hora").value = horaAhora();
 cargarRegistros();
 </script>
 </body>
