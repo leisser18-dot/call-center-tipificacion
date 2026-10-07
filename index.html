@@ -6,117 +6,214 @@
 <title>Tipificación de Incidencias - Call Center</title>
 <style>
   :root {
-    --corp-900: #0b1f37;
-    --corp-800: #123258;
-    --corp-700: #164a86;
-    --corp-600: #1a5fb4;
-    --corp-050: #f4f8fd;
-    --gray-900: #1c2733;
-    --gray-700: #44515f;
-    --gray-500: #6b7885;
-    --gray-300: #d3dae2;
-    --gray-200: #e4e9ef;
-    --gray-100: #f2f5f8;
+    --navy-950: #06121f;
+    --navy-900: #081729;
+    --navy-800: #0d2440;
+    --navy-700: #123258;
+    --navy-600: #164a86;
+    --navy-500: #1a5fb4;
+    --blue-050: #eef4fc;
+    --gray-050: #f7f9fc;
+    --gray-100: #eef1f6;
+    --gray-200: #e2e7ee;
+    --gray-300: #cdd4de;
+    --gray-400: #97a3b2;
+    --gray-500: #67717f;
+    --gray-600: #4a5561;
+    --gray-800: #26313d;
+    --gray-900: #151d27;
     --white: #fff;
-    --danger: #b42318;
-    --danger-050: #fdf0f0;
-    --radius: 8px;
-    --shadow: 0 1px 3px rgba(11, 31, 55, .07), 0 4px 14px rgba(11, 31, 55, .05);
-    --font: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    --green: #0f7b4f;
+    --green-bg: #e8f6ef;
+    --green-br: #bfe6d3;
+    --amber: #8a5d09;
+    --amber-bg: #fdf4e3;
+    --amber-br: #f0dcae;
+    --red: #b42318;
+    --red-bg: #fdeceb;
+    --red-br: #f6cdca;
+    --purple: #5b3fa8;
+    --purple-bg: #f0ebfb;
+    --purple-br: #dcd0f5;
+    --slate-bg: #eceff3;
+    --slate-br: #d5dbe3;
+    --radius: 10px;
+    --radius-sm: 7px;
+    --border: 1px solid var(--gray-200);
+    --shadow-sm: 0 1px 2px rgba(6, 18, 31, .06);
+    --shadow: 0 1px 3px rgba(6, 18, 31, .07), 0 8px 24px rgba(6, 18, 31, .05);
+    --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
     font-family: var(--font);
     background: var(--gray-100);
     color: var(--gray-900);
-    min-height: 100vh;
-    padding: 28px 16px;
     font-size: 14px;
     line-height: 1.5;
+    min-height: 100vh;
   }
-  .wrap { max-width: 920px; margin: 0 auto; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
 
-  header {
-    background: var(--corp-900);
-    border: 1px solid var(--corp-800);
-    color: var(--white);
-    border-radius: var(--radius);
-    padding: 18px 24px;
-    margin-bottom: 22px;
+  /* ---------- Barra superior ---------- */
+  .topbar {
+    background: linear-gradient(180deg, var(--navy-900) 0%, var(--navy-800) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, .07);
+    box-shadow: 0 2px 12px rgba(6, 18, 31, .28);
+    margin-bottom: 26px;
+  }
+  .topbar-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 14px 20px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 16px;
-    box-shadow: var(--shadow);
+    flex-wrap: wrap;
   }
-  header .logo {
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
     background: rgba(255, 255, 255, .1);
-    border: 1px solid rgba(255, 255, 255, .18);
-    border-radius: var(--radius);
-    padding: 10px;
-    font-size: 26px;
-    line-height: 1;
-  }
-  header h1 { font-size: 17px; font-weight: 600; letter-spacing: .01em; }
-  header p { font-size: 12.5px; color: rgba(255, 255, 255, .72); }
-
-  .card {
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 22px 24px;
-    margin-bottom: 22px;
-  }
-  .card h2 {
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: var(--radius-sm);
+    color: var(--white);
     font-size: 13px;
     font-weight: 700;
+    letter-spacing: .06em;
+  }
+  .brand-text h1 { color: var(--white); font-size: 16.5px; font-weight: 600; letter-spacing: .01em; }
+  .brand-text p { color: rgba(255, 255, 255, .6); font-size: 12.5px; }
+  .topbar-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 999px;
+    padding: 6px 14px;
+    color: rgba(255, 255, 255, .85);
+    font-size: 12.5px;
+    text-transform: capitalize;
+  }
+  .topbar-chip .pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #3ddc84;
+    box-shadow: 0 0 0 3px rgba(61, 220, 132, .22);
+  }
+
+  /* ---------- Indicadores ---------- */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .kpi {
+    background: var(--white);
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 14px 16px 13px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--navy-600);
+  }
+  .kpi-alert::before { background: var(--red); }
+  .kpi-info::before { background: var(--navy-500); }
+  .kpi-warn::before { background: var(--amber); }
+  .kpi-label {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: .07em;
-    color: var(--corp-800);
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--gray-200);
+    letter-spacing: .09em;
+    color: var(--gray-500);
+    margin-bottom: 4px;
+  }
+  .kpi-value {
+    display: block;
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--navy-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-note { display: block; font-size: 11.5px; color: var(--gray-400); margin-top: 3px; }
+
+  /* ---------- Tarjetas ---------- */
+  .card {
+    background: var(--white);
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 22px;
+    margin-bottom: 22px;
   }
   .card-head {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--gray-200);
-  }
-  .card-head h2 { margin: 0; padding: 0; border: none; }
-
-  .filtro {
-    display: flex;
-    align-items: flex-end;
-    gap: 12px;
+    align-items: flex-start;
+    gap: 14px;
     flex-wrap: wrap;
     margin-bottom: 16px;
-    padding: 12px 14px;
-    background: var(--corp-050);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--gray-200);
   }
-  .filtro .field { min-width: 150px; }
-  .filtro-info {
-    align-self: center;
+  .card-head h2, .card > h2 {
     font-size: 13px;
-    color: var(--gray-500);
-    margin-left: auto;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--navy-800);
+  }
+  .card-sub { font-size: 12.5px; color: var(--gray-500); margin-top: 2px; }
+  .head-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .chip-count {
+    background: var(--blue-050);
+    border: 1px solid #d5e4f8;
+    color: var(--navy-600);
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
   }
 
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; }
+  /* ---------- Formulario ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+    gap: 15px 16px;
+  }
   .field { display: flex; flex-direction: column; gap: 6px; }
   .field.full { grid-column: 1 / -1; }
-  label { font-size: 12.5px; font-weight: 600; color: var(--gray-700); }
-  label .req { color: var(--danger); }
+  label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--gray-600);
+  }
+  label .req { color: var(--red); }
 
   input, select, textarea {
     border: 1px solid var(--gray-300);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     padding: 9px 11px;
     font-size: 14px;
     font-family: inherit;
@@ -125,97 +222,109 @@
     width: 100%;
     transition: border-color .15s, box-shadow .15s;
   }
-  input::placeholder, textarea::placeholder { color: #9aa5b1; }
+  input::placeholder, textarea::placeholder { color: var(--gray-400); }
+  input:hover, select:hover, textarea:hover { border-color: var(--gray-400); }
   input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: var(--corp-600);
-    box-shadow: 0 0 0 3px rgba(26, 95, 180, .14);
+    border-color: var(--navy-500);
+    box-shadow: 0 0 0 3px rgba(26, 95, 180, .15);
   }
-  textarea { resize: vertical; min-height: 90px; }
+  textarea { resize: vertical; min-height: 92px; }
 
+  .form-actions {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- Botones ---------- */
   .btn {
     background: var(--white);
     border: 1px solid var(--gray-300);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     padding: 10px 20px;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 600;
     cursor: pointer;
     font-family: inherit;
-    color: var(--gray-700);
-    transition: background-color .15s, border-color .15s, box-shadow .15s;
+    color: var(--gray-600);
+    transition: background-color .15s, border-color .15s, color .15s, box-shadow .15s;
   }
-  .btn:hover { background: var(--gray-100); border-color: var(--gray-500); }
+  .btn:hover { background: var(--gray-050); border-color: var(--gray-400); }
   .btn:active { transform: translateY(1px); }
+  .btn:focus-visible { outline: 2px solid var(--navy-500); outline-offset: 2px; }
   .btn-primary {
-    background: var(--corp-700);
-    border-color: var(--corp-700);
+    background: linear-gradient(180deg, var(--navy-600), var(--navy-700));
+    border-color: var(--navy-700);
     color: var(--white);
-    box-shadow: 0 1px 2px rgba(11, 31, 55, .18);
+    box-shadow: 0 1px 2px rgba(6, 18, 31, .2);
   }
-  .btn-primary:hover { background: var(--corp-600); border-color: var(--corp-600); }
-  .btn-secondary {
-    background: var(--white);
-    border-color: var(--gray-300);
-    color: var(--gray-700);
-  }
-  .btn-secondary:hover { background: var(--gray-100); }
-
+  .btn-primary:hover { background: linear-gradient(180deg, var(--navy-500), var(--navy-600)); border-color: var(--navy-600); }
   .btn-mini {
-    background: var(--white);
-    border: 1px solid var(--gray-300);
+    padding: 6px 13px;
+    font-size: 12.5px;
     border-radius: 6px;
-    padding: 5px 12px;
+    color: var(--navy-600);
+    background: var(--white);
+  }
+  .btn-mini:hover { background: var(--blue-050); border-color: var(--navy-500); }
+  .btn-mini.btn-elim { color: var(--red); margin-left: 6px; }
+  .btn-mini.btn-elim:hover { background: var(--red-bg); border-color: var(--red); }
+
+  /* ---------- Filtros ---------- */
+  .filtro {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    background: var(--gray-050);
+    border: var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .filtro .field { min-width: 158px; }
+  .filtro-info {
+    align-self: center;
+    margin-left: auto;
     font-size: 12.5px;
     font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    color: var(--corp-700);
-    transition: background-color .15s, border-color .15s, color .15s;
+    color: var(--navy-600);
+    font-variant-numeric: tabular-nums;
   }
-  .btn-mini:hover { background: var(--corp-050); border-color: var(--corp-600); }
-  .btn-mini.btn-elim {
-    background: var(--white);
-    border-color: var(--gray-300);
-    color: var(--danger);
-    margin-left: 6px;
+
+  /* ---------- Tabla ---------- */
+  .table-wrap {
+    overflow-x: auto;
+    border: var(--border);
+    border-radius: var(--radius-sm);
   }
-  .btn-mini.btn-elim:hover { background: var(--danger-050); border-color: var(--danger); }
-
-  .form-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 10px; }
-
-  .toast {
-    display: none;
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--corp-900);
-    color: var(--white);
-    border-radius: 6px;
-    padding: 11px 18px;
-    font-size: 13.5px;
-    box-shadow: 0 6px 20px rgba(11, 31, 55, .28);
-    z-index: 100;
-  }
-  .toast.error { background: var(--danger); }
-
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--white); }
+  th, td { text-align: left; padding: 11px 13px; vertical-align: middle; }
   th {
-    background: var(--corp-050);
-    color: var(--gray-700);
-    font-size: 11.5px;
+    background: var(--gray-050);
+    color: var(--gray-600);
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: .05em;
-    border-bottom: 2px solid var(--gray-200);
+    letter-spacing: .06em;
+    border-bottom: 1px solid var(--gray-300);
     white-space: nowrap;
   }
+  td { border-bottom: 1px solid var(--gray-200); color: var(--gray-800); }
   tbody tr:last-child td { border-bottom: none; }
-  tbody tr:hover td { background: var(--corp-050); }
+  tbody tr:hover td { background: var(--blue-050); }
+  .num { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--gray-600); }
+  .col-desc { max-width: 240px; color: var(--gray-500); }
+  .col-acc { text-align: right; white-space: nowrap; }
+  .empty { text-align: center; color: var(--gray-500); padding: 30px 0; font-size: 13.5px; }
 
-  .badge {
+  /* ---------- Etiquetas ---------- */
+  .badge, .pill {
     display: inline-block;
     padding: 3px 10px;
     border-radius: 999px;
@@ -223,38 +332,111 @@
     font-weight: 700;
     letter-spacing: .02em;
     border: 1px solid transparent;
+    white-space: nowrap;
   }
-  .sev-baja { background: #e9f7ee; color: #157a3a; border-color: #c6ebd3; }
-  .sev-media { background: #fdf5e3; color: #92400e; border-color: #f4e3b8; }
-  .sev-alta { background: #fdeceb; color: #b42318; border-color: #f6cdca; }
+  .sev-baja { background: var(--green-bg); color: var(--green); border-color: var(--green-br); }
+  .sev-media { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-br); }
+  .sev-alta { background: var(--red-bg); color: var(--red); border-color: var(--red-br); }
   .sev-critica { background: #f8e9ed; color: #7a1f2b; border-color: #ecc8d1; }
-  .empty { text-align: center; color: var(--gray-500); padding: 28px 0; }
 
-  .meta { font-size: 12px; color: var(--gray-500); }
+  .est-abi { background: var(--blue-050); color: var(--navy-600); border-color: #d5e4f8; }
+  .est-pro { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-br); }
+  .est-res { background: var(--green-bg); color: var(--green); border-color: var(--green-br); }
+  .est-esc { background: var(--purple-bg); color: var(--purple); border-color: var(--purple-br); }
+  .est-cer { background: var(--slate-bg); color: var(--gray-600); border-color: var(--slate-br); }
 
+  /* ---------- Toast y pie ---------- */
+  .toast {
+    display: none;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: var(--navy-900);
+    color: var(--white);
+    border-left: 4px solid var(--navy-500);
+    border-radius: var(--radius-sm);
+    padding: 12px 18px;
+    font-size: 13.5px;
+    box-shadow: 0 8px 24px rgba(6, 18, 31, .3);
+    z-index: 100;
+    max-width: calc(100vw - 40px);
+  }
+  .toast.error { background: var(--red); border-left-color: #7a1f2b; }
+
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 4px 0 26px;
+    font-size: 12px;
+    color: var(--gray-500);
+  }
+
+  @media (max-width: 860px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 640px) {
-    body { padding: 16px 10px; }
+    .wrap { padding: 0 12px; }
+    .topbar-inner { padding: 12px; }
+    .card { padding: 16px 14px; }
     .grid { grid-template-columns: 1fr; }
-    .card { padding: 18px 16px; }
-    header { padding: 16px; }
-    .card-head { flex-wrap: wrap; }
-    .form-actions { flex-wrap: wrap; }
     .form-actions .btn { flex: 1; }
+    .filtro-info { margin-left: 0; width: 100%; }
+    .toast { right: 12px; left: 12px; bottom: 12px; }
+  }
+  @media (max-width: 420px) {
+    .kpis { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="logo">🎧</div>
-    <div>
-      <h1>Tipificación de Incidencias</h1>
-      <p>Registro y clasificación de incidencias para el call center</p>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">CC</span>
+      <div class="brand-text">
+        <h1>Tipificación de Incidencias</h1>
+        <p>Panel de gestión · Call Center</p>
+      </div>
     </div>
-  </header>
+    <div class="topbar-chip"><span class="pulse"></span><span id="topbarFecha"></span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="kpis" aria-label="Indicadores">
+    <article class="kpi">
+      <span class="kpi-label">Total registros</span>
+      <span class="kpi-value" id="kpiTotal">0</span>
+      <span class="kpi-note">histórico acumulado</span>
+    </article>
+    <article class="kpi kpi-warn">
+      <span class="kpi-label">Pendientes</span>
+      <span class="kpi-value" id="kpiPendientes">0</span>
+      <span class="kpi-note">abiertas, en proceso o escaladas</span>
+    </article>
+    <article class="kpi kpi-alert">
+      <span class="kpi-label">Críticas</span>
+      <span class="kpi-value" id="kpiCriticas">0</span>
+      <span class="kpi-note">severidad crítica</span>
+    </article>
+    <article class="kpi kpi-info">
+      <span class="kpi-label">Registradas hoy</span>
+      <span class="kpi-value" id="kpiHoy">0</span>
+      <span class="kpi-note">fecha de hoy</span>
+    </article>
+  </section>
 
   <form id="formulario" class="card" novalidate>
-    <h2>Nueva incidencia</h2>
+    <div class="card-head">
+      <div>
+        <h2 id="tituloForm">Nueva incidencia</h2>
+        <p class="card-sub" id="subtituloForm">Completa los datos del contacto recibido</p>
+      </div>
+    </div>
     <div class="grid">
       <div class="field">
         <label for="fecha">Fecha</label>
@@ -317,11 +499,15 @@
     </div>
   </form>
 
-  <div class="card">
+  <section class="card">
     <div class="card-head">
-      <h2>Últimos registros</h2>
-      <button type="button" class="btn btn-mini" id="btnExcel">Descargar Excel</button>
+      <div class="head-left">
+        <h2>Registros de incidencias</h2>
+        <span class="chip-count" id="chipTotal"></span>
+      </div>
+      <button type="button" class="btn btn-mini" id="btnExcel">Exportar Excel</button>
     </div>
+
     <div class="filtro">
       <div class="field">
         <label for="fDesde">Desde</label>
@@ -334,7 +520,8 @@
       <button type="button" class="btn btn-mini" id="btnFiltroLimpiar">Limpiar filtro</button>
       <span class="filtro-info" id="filtroInfo"></span>
     </div>
-    <div style="overflow-x:auto;">
+
+    <div class="table-wrap">
       <table>
         <thead>
           <tr>
@@ -346,15 +533,20 @@
             <th>Severidad</th>
             <th>Estado</th>
             <th>Descripción</th>
-            <th>Acciones</th>
+            <th class="col-acc">Acciones</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
       </table>
       <p class="empty" id="empty" style="display:none;">Aún no hay incidencias registradas.</p>
     </div>
-  </div>
-</div>
+  </section>
+
+  <footer class="foot">
+    <span>Tipificación de Incidencias · Call Center</span>
+    <span id="footFecha"></span>
+  </footer>
+</main>
 
 <div class="toast" id="toast"></div>
 
@@ -384,6 +576,13 @@ function horaAhora() {
   return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
 }
 
+function fechaLarga() {
+  const t = new Date().toLocaleDateString("es-ES", {
+    weekday: "long", day: "2-digit", month: "long", year: "numeric"
+  });
+  return t.charAt(0).toUpperCase() + t.slice(1) + " · " + horaAhora();
+}
+
 function esc(t) {
   const d = document.createElement("div");
   d.textContent = t == null ? "" : t;
@@ -393,6 +592,22 @@ function esc(t) {
 function badgeSeveridad(s) {
   const map = { "Baja": "sev-baja", "Media": "sev-media", "Alta": "sev-alta", "Crítica": "sev-critica" };
   return `<span class="badge ${map[s] || ""}">${esc(s)}</span>`;
+}
+
+function pillEstado(e) {
+  const map = { "Abierta": "est-abi", "En proceso": "est-pro", "Resuelta": "est-res", "Escalada": "est-esc", "Cerrada": "est-cer" };
+  return `<span class="pill ${map[e] || ""}">${esc(e)}</span>`;
+}
+
+function renderKPIs() {
+  const pendientes = registros.filter(r => ["Abierta", "En proceso", "Escalada"].indexOf(r.estado) !== -1).length;
+  const criticas = registros.filter(r => r.severidad === "Crítica").length;
+  const hoy = registros.filter(r => r.fecha === fechaHoy()).length;
+  $("kpiTotal").textContent = registros.length;
+  $("kpiPendientes").textContent = pendientes;
+  $("kpiCriticas").textContent = criticas;
+  $("kpiHoy").textContent = hoy;
+  $("chipTotal").textContent = registros.length + " en total";
 }
 
 function registrosFiltrados() {
@@ -422,24 +637,28 @@ function renderLista() {
   for (const r of mostrar) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${esc(r.fecha)}</td>
-      <td>${esc(r.hora)}</td>
+      <td class="num">${esc(r.fecha)}</td>
+      <td class="num">${esc(r.hora)}</td>
       <td>${esc(r.canal)}</td>
       <td>${esc(r.agente)}</td>
       <td>${esc(r.tipo)}</td>
       <td>${badgeSeveridad(r.severidad)}</td>
-      <td>${esc(r.estado)}</td>
-      <td style="max-width:260px;">${esc((r.descripcion || "").slice(0, 60))}</td>
-      <td><button type="button" class="btn-mini" data-accion="editar" data-id="${esc(r.id)}">Editar</button><button type="button" class="btn-mini btn-elim" data-accion="eliminar" data-id="${esc(r.id)}">Eliminar</button></td>`;
+      <td>${pillEstado(r.estado)}</td>
+      <td class="col-desc">${esc((r.descripcion || "").slice(0, 60))}</td>
+      <td class="col-acc">
+        <button type="button" class="btn btn-mini" data-accion="editar" data-id="${esc(r.id)}">Editar</button>
+        <button type="button" class="btn btn-mini btn-elim" data-accion="eliminar" data-id="${esc(r.id)}">Eliminar</button>
+      </td>`;
     tbody.appendChild(tr);
   }
+  renderKPIs();
 }
 
 async function cargarRegistros() {
   try {
     const res = await fetch("/api/incidencias");
     const data = await res.json();
-    registros = data;
+    registros = Array.isArray(data) ? data : [];
     renderLista();
   } catch (e) {
     mostrarToast("No se pudo leer los registros", true);
@@ -459,6 +678,8 @@ function editarRegistro(id) {
   $("estado").value = r.estado || "";
   $("descripcion").value = r.descripcion || "";
   $("btnGuardar").textContent = "Actualizar incidencia";
+  $("tituloForm").textContent = "Editar incidencia";
+  $("subtituloForm").textContent = "Modifica los datos y guarda los cambios";
   $("btnCancelar").style.display = "inline-block";
   $("formulario").scrollIntoView({ behavior: "smooth" });
 }
@@ -469,6 +690,8 @@ function cancelarEdicion() {
   $("fecha").value = fechaHoy();
   $("hora").value = horaAhora();
   $("btnGuardar").textContent = "Registrar incidencia";
+  $("tituloForm").textContent = "Nueva incidencia";
+  $("subtituloForm").textContent = "Completa los datos del contacto recibido";
   $("btnCancelar").style.display = "none";
 }
 
@@ -580,6 +803,13 @@ $("btnFiltroLimpiar").addEventListener("click", () => {
   $("fHasta").value = "";
   renderLista();
 });
+
+$("topbarFecha").textContent = fechaLarga();
+$("footFecha").textContent = "Actualizado: " + fechaLarga();
+setInterval(() => {
+  $("topbarFecha").textContent = fechaLarga();
+  $("footFecha").textContent = "Actualizado: " + fechaLarga();
+}, 60000);
 
 $("fecha").value = fechaHoy();
 $("hora").value = horaAhora();
