@@ -70,6 +70,20 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
         self.send_error(405)
 
+    def do_DELETE(self):
+        if self.path.startswith("/api/incidencias/"):
+            inc_id = self.path.rsplit("/", 1)[-1]
+            data = self.load_data()
+            nueva = [r for r in data if r.get("id") != inc_id]
+            if len(nueva) == len(data):
+                self.send_json({"ok": False, "error": "Incidencia no encontrada"}, 404)
+                return
+            self.save_data(nueva)
+            self.send_json({"ok": True})
+            return
+
+        self.send_error(405)
+
     def do_OPTIONS(self):
         self.send_response(200)
         self.end_headers()

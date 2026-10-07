@@ -125,6 +125,13 @@
     color: #155eef;
   }
   .btn-mini:hover { background: #e0e8f5; }
+  .btn-mini.btn-elim {
+    background: #fff1f1;
+    border-color: #f2b8bb;
+    color: #b42318;
+    margin-left: 6px;
+  }
+  .btn-mini.btn-elim:hover { background: #ffdcdd; }
 
   .form-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 12px; }
 
@@ -353,7 +360,7 @@ function renderLista() {
       <td>${badgeSeveridad(r.severidad)}</td>
       <td>${esc(r.estado)}</td>
       <td style="max-width:260px;">${esc((r.descripcion || "").slice(0, 60))}</td>
-      <td><button type="button" class="btn-mini" data-id="${esc(r.id)}">Editar</button></td>`;
+      <td><button type="button" class="btn-mini" data-accion="editar" data-id="${esc(r.id)}">Editar</button><button type="button" class="btn-mini btn-elim" data-accion="eliminar" data-id="${esc(r.id)}">Eliminar</button></td>`;
     tbody.appendChild(tr);
   }
 }
@@ -398,8 +405,28 @@ function cancelarEdicion() {
 $("tbody").addEventListener("click", (e) => {
   const btn = e.target.closest(".btn-mini");
   if (!btn) return;
+  if (btn.dataset.accion === "eliminar") {
+    eliminarRegistro(btn.dataset.id);
+    return;
+  }
   editarRegistro(btn.dataset.id);
 });
+
+async function eliminarRegistro(id) {
+  const r = registros.find((x) => x.id === id);
+  const etiqueta = r ? `${r.fecha} ${r.hora || ""} - ${r.tipo}` : "este registro";
+  if (!confirm(`¿Eliminar ${etiqueta}? Esta acción no se puede deshacer.`)) return;
+  try {
+    const res = await fetch(`/api/incidencias/${encodeURIComponent(id)}`, { method: "DELETE" });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || "Error");
+    if (editandoId === id) cancelarEdicion();
+    mostrarToast("Incidencia eliminada");
+    cargarRegistros();
+  } catch (err) {
+    mostrarToast("Error al eliminar: " + err.message, true);
+  }
+}
 
 $("formulario").addEventListener("submit", async (e) => {
   e.preventDefault();

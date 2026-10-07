@@ -37,3 +37,14 @@ export async function onRequestPut(context) {
 
   return json({ ok: true, incidencia: lista[idx] });
 }
+
+export async function onRequestDelete(context) {
+  const id = context.params.id;
+  const lista = await getAll(context.env);
+  const nueva = lista.filter((i) => i.id !== id);
+  if (nueva.length === lista.length) {
+    return json({ ok: false, error: "Incidencia no encontrada" }, 404);
+  }
+  await context.env.CALL_CENTER_KV.put(KEY, JSON.stringify(nueva));
+  return json({ ok: true });
+}
