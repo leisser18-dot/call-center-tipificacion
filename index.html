@@ -109,6 +109,50 @@
     background: #3ddc84;
     box-shadow: 0 0 0 3px rgba(61, 220, 132, .22);
   }
+  .topbar-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+  /* ---------- Navegación entre vistas ---------- */
+  .tabs {
+    display: inline-flex;
+    gap: 4px;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 999px;
+    padding: 4px;
+  }
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, .72);
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color .15s, color .15s;
+  }
+  .tab:hover { color: var(--white); background: rgba(255, 255, 255, .1); }
+  .tab.active {
+    background: var(--white);
+    color: var(--navy-800);
+    box-shadow: 0 1px 3px rgba(6, 18, 31, .3);
+  }
+  .tab-badge {
+    background: var(--navy-600);
+    color: var(--white);
+    border-radius: 999px;
+    min-width: 20px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .tab.active .tab-badge { background: var(--navy-600); color: var(--white); }
 
   /* ---------- Indicadores ---------- */
   .kpis {
@@ -401,11 +445,19 @@
         <p>Panel de gestión · Call Center</p>
       </div>
     </div>
-    <div class="topbar-chip"><span class="pulse"></span><span id="topbarFecha"></span></div>
+    <div class="topbar-actions">
+      <nav class="tabs" aria-label="Vistas">
+        <button type="button" class="tab active" id="tabForm" data-vista="form">Nueva incidencia</button>
+        <button type="button" class="tab" id="tabLista" data-vista="lista">Registros <span class="tab-badge" id="tabBadge">0</span></button>
+      </nav>
+      <div class="topbar-chip"><span class="pulse"></span><span id="topbarFecha"></span></div>
+    </div>
   </div>
 </header>
 
 <main class="wrap">
+
+  <section id="vistaForm">
 
   <section class="kpis" aria-label="Indicadores">
     <article class="kpi">
@@ -499,6 +551,9 @@
     </div>
   </form>
 
+  </section>
+
+  <section id="vistaRegistros" style="display:none;">
   <section class="card">
     <div class="card-head">
       <div class="head-left">
@@ -540,6 +595,7 @@
       </table>
       <p class="empty" id="empty" style="display:none;">Aún no hay incidencias registradas.</p>
     </div>
+  </section>
   </section>
 
   <footer class="foot">
@@ -608,7 +664,21 @@ function renderKPIs() {
   $("kpiCriticas").textContent = criticas;
   $("kpiHoy").textContent = hoy;
   $("chipTotal").textContent = registros.length + " en total";
+  $("tabBadge").textContent = registros.length;
 }
+
+function mostrarVista(v) {
+  const esForm = v === "form";
+  $("vistaForm").style.display = esForm ? "" : "none";
+  $("vistaRegistros").style.display = esForm ? "none" : "";
+  $("tabForm").classList.toggle("active", esForm);
+  $("tabLista").classList.toggle("active", !esForm);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll(".tab").forEach((t) => {
+  t.addEventListener("click", () => mostrarVista(t.dataset.vista));
+});
 
 function registrosFiltrados() {
   const desde = $("fDesde").value;
@@ -681,6 +751,7 @@ function editarRegistro(id) {
   $("tituloForm").textContent = "Editar incidencia";
   $("subtituloForm").textContent = "Modifica los datos y guarda los cambios";
   $("btnCancelar").style.display = "inline-block";
+  mostrarVista("form");
   $("formulario").scrollIntoView({ behavior: "smooth" });
 }
 
@@ -751,6 +822,7 @@ $("formulario").addEventListener("submit", async (e) => {
     mostrarToast(editandoId ? "Incidencia actualizada" : "Incidencia registrada correctamente");
     cancelarEdicion();
     cargarRegistros();
+    mostrarVista("lista");
   } catch (err) {
     mostrarToast("Error al guardar: " + err.message, true);
   }
