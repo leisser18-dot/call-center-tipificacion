@@ -8,4 +8,4 @@ out.log
 
 # Node / Wrangler
 node_modules/
-.wrangler/
+.wrangler/__pycache__/
